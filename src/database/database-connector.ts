@@ -1,7 +1,9 @@
 import { ConnectionOptions, createConnection, getConnection } from 'typeorm';
-import { config } from '../config/config';
+import { EnvConfig } from '../config/env-config';
 
 export class DatabaseConnector {
+  constructor(private readonly envConfig: EnvConfig) {}
+
   async connect() {
     await createConnection(this.getConnOptions());
     console.info('Connect to mysql successfully.');
@@ -13,6 +15,7 @@ export class DatabaseConnector {
   }
 
   private getConnOptions() {
+    const config = this.envConfig.getEnvConfig();
     const options: ConnectionOptions = {
       type: 'mysql',
       entities: [__dirname + '/entity/*.entity{.ts,.js}'],
